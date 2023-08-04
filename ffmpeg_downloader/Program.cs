@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using System.Threading.Tasks;
 using System.Speech.Synthesis;
 using System.Diagnostics;
 
@@ -60,46 +59,6 @@ namespace ffmpeg_downloader
                         }
                     }
                 }
-            }
-        }
-
-
-        static void DownloadChunk(string url, FileStream fileStream, byte[] buffer, long startRange, long endRange)
-        {
-            // 创建 HTTP 请求
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-
-            // 设置下载范围
-            request.AddRange(startRange, endRange);
-
-            // 获取响应
-            using (WebResponse response = request.GetResponse())
-            {
-                // 打开响应流
-                using (Stream responseStream = response.GetResponseStream())
-                {
-                    int bytesRead;
-                    while ((bytesRead = responseStream.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        // 写入文件
-                        fileStream.Write(buffer, 0, bytesRead);
-                    }
-                }
-            }
-        }
-
-        // 使用static修饰符，使方法成为静态方法
-        public static void Delete(string name)
-        {
-            if (Directory.Exists(name))
-            {
-                // 如果是文件夹，删除文件夹及其内容
-                Directory.Delete(name, true);
-            }
-            else if (File.Exists(name))
-            {
-                // 如果是文件，删除文件
-                File.Delete(name);
             }
         }
 
