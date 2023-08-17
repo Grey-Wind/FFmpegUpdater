@@ -25,7 +25,7 @@ ZipFile.ExtractToDirectory(zipFilePath, currentDirectory);
 
 // 下面开始添加Path
 string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
-string ffmpegBinPath = Path.Combine(appDirectory, "ffmpeg", "bin");
+string ffmpegBinPath = Path.Combine(appDirectory, "ffmpeg-master-latest-win64-gpl-shared", "bin");
 
 Console.WriteLine("请选择要添加路径的类型：");
 Console.WriteLine("1. 用户路径");
@@ -117,6 +117,7 @@ static string GetTargetString(EnvironmentVariableTarget target)
     return target == EnvironmentVariableTarget.Machine ? "M" : "U";
 }
 
+// 以管理员重启
 static void RestartAsAdministrator()
 {
     string fileName = "FFmpegUpdater.exe";
@@ -133,17 +134,7 @@ static void RestartAsAdministrator()
     Environment.Exit(0);// 关闭
 }
 
-
-
-
-
-
-
-
-
-
-
-
+// 下载逻辑
 void Download(string url, string folderPath, string fileName)
 {
     string filePath = Path.Combine(folderPath, fileName);
@@ -161,6 +152,7 @@ void Download(string url, string folderPath, string fileName)
     }
 }
 
+// 删除逻辑
 void Delete(string name)
 {
     if (Directory.Exists(name))
