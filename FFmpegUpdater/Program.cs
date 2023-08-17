@@ -51,18 +51,18 @@ else if (option == "2")
     {
         AddDirectoryToPath(ffmpegBinPath, EnvironmentVariableTarget.Machine);
         Console.WriteLine("目录已成功添加到系统路径环境变量中。");
+
+        if (!IsUserAdministrator())
+        {
+            Console.WriteLine("请使用管理员权限运行此应用程序。将在 2 秒后自动重启...");
+            Thread.Sleep(2000);
+            RestartAsAdministrator();
+            return;
+        }
     }
     else
     {
         Console.WriteLine("目录已存在于系统路径环境变量中。");
-    }
-
-    if (!IsUserAdministrator())
-    {
-        Console.WriteLine("请使用管理员权限运行此应用程序。将在 2 秒后自动重启...");
-        Thread.Sleep(2000);
-        RestartAsAdministrator();
-        return;
     }
 }
 else
