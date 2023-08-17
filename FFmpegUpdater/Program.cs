@@ -119,23 +119,18 @@ static string GetTargetString(EnvironmentVariableTarget target)
 
 static void RestartAsAdministrator()
 {
-    string[] arguments = Environment.GetCommandLineArgs();
+    string fileName = "FFmpegUpdater.exe";
 
-    ProcessStartInfo startInfo = new ProcessStartInfo
-    {
-        FileName = arguments[0],
-        UseShellExecute = true,
-        Verb = "runas" // 使用管理员权限运行
-    };
+    // 创建 ProcessStartInfo 对象
+    ProcessStartInfo startInfo = new ProcessStartInfo();
+    startInfo.FileName = fileName;
+    startInfo.UseShellExecute = true;
+    startInfo.Verb = "runas"; // 使用管理员权限运行
+    Process.Start(startInfo);// 启动进程
 
-    try
-    {
-        Process.Start(startInfo);
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("无法以管理员权限重新启动应用程序：" + ex.Message);
-    }
+    Thread.Sleep(500);
+
+    Environment.Exit(0);// 关闭
 }
 
 
