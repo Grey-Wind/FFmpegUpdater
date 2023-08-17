@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO.Compression;
+using System.Security.Principal;
 
 Console.WriteLine("开始下载，请耐心等待"); // 输出文本并换行
 Download("https://hub.ggo.icu/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl-shared.zip", "./", "ffmpeg.zip");
@@ -41,7 +42,7 @@ if (option == "1")
     }
     else
     {
-    Console.WriteLine("目录已存在于用户路径环境变量中。");
+        Console.WriteLine("目录已存在于用户路径环境变量中。");
     }
 }
 else if (option == "2")
@@ -55,13 +56,29 @@ else if (option == "2")
     {
         Console.WriteLine("目录已存在于系统路径环境变量中。");
     }
+
+    if (!IsUserAdministrator())
+    {
+        Console.WriteLine("请使用管理员权限运行此应用程序。将在 2 秒后自动重启...");
+        Thread.Sleep(2000);
+        RestartAsAdministrator();
+        return;
+    }
 }
 else
 {
     Console.WriteLine("无效的选项！");
 }
 
-    Console.ReadLine();
+Console.ReadLine();
+
+// Path逻辑
+static bool IsUserAdministrator()
+{
+    WindowsIdentity identity = WindowsIdentity.GetCurrent();
+    WindowsPrincipal principal = new WindowsPrincipal(identity);
+    return principal.IsInRole(WindowsBuiltInRole.Administrator);
+}
 
 static bool IsDirectoryInPath(string directory, string pathVariable)
 {
@@ -100,7 +117,26 @@ static string GetTargetString(EnvironmentVariableTarget target)
     return target == EnvironmentVariableTarget.Machine ? "M" : "U";
 }
 
+static void RestartAsAdministrator()
+{
+    string[] arguments = Environment.GetCommandLineArgs();
 
+    ProcessStartInfo startInfo = new ProcessStartInfo
+    {
+        FileName = arguments[0],
+        UseShellExecute = true,
+        Verb = "runas" // 使用管理员权限运行
+    };
+
+    try
+    {
+        Process.Start(startInfo);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("无法以管理员权限重新启动应用程序：" + ex.Message);
+    }
+}
 
 
 
